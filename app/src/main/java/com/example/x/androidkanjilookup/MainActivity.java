@@ -15,6 +15,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -37,14 +41,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        try {
+            RadicalLookup rl = new RadicalLookup(getApplicationContext());
+            StringBuilder out = new StringBuilder();
+            for (String k : rl.getKanjiFromEnglishStrings( new String[]{"woman", "roof"})) {
+                out.append(k);
+                out.append("/");
+            }
+            lblOutput.setText(out);
+
+        }
+        catch (Exception e)
+        {
+            lblOutput.setText(e.getMessage());
+        }
+
+
         EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
 
         radicalsInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -52,20 +74,34 @@ public class MainActivity extends AppCompatActivity {
                 TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
                 //lblOutput.setText(radicalsInput.getText());
 
+                Date start = new Date();
+
                 try {
                     RadicalLookup rl = new RadicalLookup(getApplicationContext());
-                    String out = "";
-                    for (RadicalLookup.Radical r : rl.getRadicalsFromEnglishString(radicalsInput.getText().toString()))
+
+                    //String merda = radicalsInput.getText().toString().split(",");
+
+                    StringBuilder out = new StringBuilder();
+                    //for (RadicalLookup.Radical r : rl.getRadicalsFromEnglishStringList(Arrays.asList(merda.split(","))))
+
+                    List<String> lista = rl.getKanjiFromEnglishStrings(radicalsInput.getText().toString().toLowerCase().split(","));
+
+                    out.append(Long.toString(((new Date()).getTime() - start.getTime())));
+                    out.append(" ");
+
+                    for (int i = 0; i < 100 && i < lista.size(); i++)
                     {
-                        out = out + r.character + "/";
+                        out.append(lista.get(i));
+                        out.append("/");
                     }
-                    lblOutput.setText(out);
-                }
-                catch (Exception e)
-                {
+
+                    if (lista.size() > 100)
+                        out.append("...");
+
+                    lblOutput.setText(out.toString());
+                } catch (Exception e) {
                     lblOutput.setText(e.getMessage());
                 }
-
             }
         });
 
