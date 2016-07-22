@@ -2,6 +2,7 @@
 package com.example.x.androidkanjilookup;
 
 import android.content.Context;
+import android.support.v7.util.SortedList;
 import android.util.ArraySet;
 
 import java.io.BufferedReader;
@@ -15,7 +16,7 @@ import java.util.Set;
 
 public class RadicalLookup {
     /*
-    Example: from "pers" will return the "person" radicalsDb, that is 人, 𠆢 and 亻
+    Example: from "pers" will return the "person" radicalsDb, that is 人, ? and 亻
      */
 
     public class Radical
@@ -92,31 +93,32 @@ public class RadicalLookup {
         return output;
     }
 
-    List<String> getAllKanjiFromRadicalList(List<Radical> radicalList)
+    Set<String> getAllKanjiFromRadicalList(List<Radical> radicalList)
     {
         HashSet<String> output = new HashSet<String>();
 
         for (Radical r : radicalList)
             output.addAll(r.relatedKanji);
 
-        return new ArrayList<>(output);
+        return output;
     }
 
     //This kinda sucks... there must be a better way of doing an intersection of Lists...
     List<String> getKanjiFromEnglishStrings(String[] englishStrings) throws Exception
     {
-        List<String> output = null;
+        Set<String> output = null;
 
         if (englishStrings.length == 0)
             return new ArrayList<String>();
 
-        List<String> a = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[0]));
-        List<String> b = null;
+        Set<String> a = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[0]));
+        Set<String> b = null;
 
         for (int i = 1; i < englishStrings.length; i++)
         {
-            output = new ArrayList<String>();
+            output = new HashSet<String>();
             b = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[i]));
+
             for (String s : a)
                 if (b.contains(s))
                     output.add(s);
@@ -125,9 +127,9 @@ public class RadicalLookup {
         }
 
         if (output == null)
-            return a;
+            return new ArrayList<String>(a);
         else
-            return output;
+            return new ArrayList<String>(output);
     }
 
     List<String> getKanjiFromRadicals(List<Radical> radicals)
