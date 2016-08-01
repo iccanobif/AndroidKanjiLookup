@@ -25,6 +25,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -73,9 +74,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,32 +94,15 @@ public class MainActivity extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(getAssets(),"DroidSansJapanese.ttf");
         //lblOutput.setTypeface(tf);
 
-       /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
-
-        //inzializza roba
-
-        GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
-
-        //carica dati
-
         try {
-            RadicalLookup rl = new RadicalLookup(getApplicationContext());
-            StringBuilder out = new StringBuilder();
-            filteredKanjiList.setAdapter(new MerdaAdapter(this, rl.getKanjiFromEnglishStrings( new String[]{"woman", "roof"})));
+            KanjiDic.initialize(this);
         }
         catch (Exception e)
         {
             lblOutput.setText(e.getMessage());
         }
 
-
+        GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
         EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
 
         radicalsInput.addTextChangedListener(new TextWatcher() {
@@ -134,27 +126,11 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     RadicalLookup rl = new RadicalLookup(getApplicationContext());
 
-                    //String merda = radicalsInput.getText().toString().split(",");
-
-                    StringBuilder out = new StringBuilder();
-                    //for (RadicalLookup.Radical r : rl.getRadicalsFromEnglishStringList(Arrays.asList(merda.split(","))))
-
                     List<String> lista = rl.getKanjiFromEnglishStrings(radicalsInput.getText().toString().toLowerCase().split(","));
+                    Collections.sort(lista, new KanjiComparator());
                     filteredKanjiList.setAdapter(new MerdaAdapter(getApplicationContext(), lista));
 
-                    out.append(Long.toString(((new Date()).getTime() - start.getTime())));
-                    /*out.append(" ");
-
-                    for (int i = 0; i < 100 && i < lista.size(); i++)
-                    {
-                        out.append(lista.get(i));
-                        out.append("/");
-                    }
-
-                    if (lista.size() > 100)
-                        out.append("...");*/
-
-                    lblOutput.setText(out.toString());
+                    lblOutput.setText(Long.toString(((new Date()).getTime() - start.getTime())));
                 } catch (Exception e) {
                     lblOutput.setText(e.getMessage());
                 }
