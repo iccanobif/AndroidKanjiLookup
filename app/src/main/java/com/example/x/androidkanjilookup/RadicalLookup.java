@@ -111,13 +111,13 @@ public class RadicalLookup {
         if (englishStrings.length == 0)
             return new ArrayList<String>();
 
-        Set<String> a = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[0]));
+        Set<String> a = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[0].trim()));
         Set<String> b = null;
 
         for (int i = 1; i < englishStrings.length; i++)
         {
             output = new HashSet<String>();
-            b = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[i]));
+            b = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[i].trim()));
 
             for (String s : a)
                 if (b.contains(s))

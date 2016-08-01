@@ -27,8 +27,19 @@
         android:text="Hello World!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="40sp"
         />
+
+    <GridView
+        android:id="@+id/filteredKanjiList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnWidth="30dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"></GridView>
+
 </LinearLayout>
 
 </RelativeLayout>

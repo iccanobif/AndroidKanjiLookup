@@ -1,5 +1,7 @@
 package com.example.x.androidkanjilookup;
 
+import android.content.Context;
+import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,11 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -20,6 +29,50 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    protected class MerdaAdapter extends BaseAdapter
+    {
+        List<String> strings;
+        Context context;
+
+        public MerdaAdapter(Context c, List<String> strings)
+        {
+            context = c;
+            this.strings = strings;
+        }
+
+        @Override
+        public int getCount() {
+            return strings.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return strings;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView != null)
+            {
+                ((TextView)convertView).setText(strings.get(position));
+                return convertView;
+            }
+            else {
+                TextView output = new TextView(context);
+                output.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 25);
+                output.setTextColor(android.graphics.Color.BLACK);
+                output.setText(strings.get(position));
+                return output;
+            }
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +94,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
+        //inzializza roba
+
+        GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
+
+        //carica dati
+
         try {
             RadicalLookup rl = new RadicalLookup(getApplicationContext());
             StringBuilder out = new StringBuilder();
-            for (String k : rl.getKanjiFromEnglishStrings( new String[]{"woman", "roof"})) {
-                out.append(k);
-                out.append("/");
-            }
-            lblOutput.setText(out);
-
+            filteredKanjiList.setAdapter(new MerdaAdapter(this, rl.getKanjiFromEnglishStrings( new String[]{"woman", "roof"})));
         }
         catch (Exception e)
         {
@@ -72,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
                 TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
+                GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
                 //lblOutput.setText(radicalsInput.getText());
 
                 Date start = new Date();
@@ -85,9 +140,10 @@ public class MainActivity extends AppCompatActivity {
                     //for (RadicalLookup.Radical r : rl.getRadicalsFromEnglishStringList(Arrays.asList(merda.split(","))))
 
                     List<String> lista = rl.getKanjiFromEnglishStrings(radicalsInput.getText().toString().toLowerCase().split(","));
+                    filteredKanjiList.setAdapter(new MerdaAdapter(getApplicationContext(), lista));
 
                     out.append(Long.toString(((new Date()).getTime() - start.getTime())));
-                    out.append(" ");
+                    /*out.append(" ");
 
                     for (int i = 0; i < 100 && i < lista.size(); i++)
                     {
@@ -96,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (lista.size() > 100)
-                        out.append("...");
+                        out.append("...");*/
 
                     lblOutput.setText(out.toString());
                 } catch (Exception e) {
