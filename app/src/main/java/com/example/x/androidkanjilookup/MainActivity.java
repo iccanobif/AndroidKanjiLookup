@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -119,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
                 TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
                 GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
-                //lblOutput.setText(radicalsInput.getText());
 
                 Date start = new Date();
 
@@ -127,13 +127,22 @@ public class MainActivity extends AppCompatActivity {
                     RadicalLookup rl = new RadicalLookup(getApplicationContext());
 
                     List<String> lista = rl.getKanjiFromEnglishStrings(radicalsInput.getText().toString().toLowerCase().split(","));
-                    Collections.sort(lista, new KanjiComparator());
+
                     filteredKanjiList.setAdapter(new MerdaAdapter(getApplicationContext(), lista));
 
                     lblOutput.setText(Long.toString(((new Date()).getTime() - start.getTime())));
                 } catch (Exception e) {
                     lblOutput.setText(e.getMessage());
                 }
+            }
+        });
+
+        filteredKanjiList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedKanji = ((TextView)view).getText().toString();
+                EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
+                txtTextInput.append(selectedKanji);
             }
         });
 

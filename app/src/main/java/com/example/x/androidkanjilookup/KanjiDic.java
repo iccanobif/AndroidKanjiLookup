@@ -12,6 +12,9 @@ public class KanjiDic {
 
     public static void initialize(Context c) throws Exception
     {
+        if (strokeNumberDictionary != null)
+            return;
+
         strokeNumberDictionary = new Hashtable<String, Integer>();
 
         InputStreamReader f = new InputStreamReader(c.getAssets().open("kanjidic.txt"), "UTF8");

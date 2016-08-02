@@ -2,15 +2,13 @@
 package com.example.x.androidkanjilookup;
 
 import android.content.Context;
-import android.support.v7.util.SortedList;
-import android.util.ArraySet;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +39,11 @@ public class RadicalLookup {
             radicalsDb = new HashMap<String, Radical>();
             loadRadicalsDb(c);
             loadKradFile(c);
+            KanjiDic.initialize(c);
+            for (Radical r : radicalsDb.values())
+            {
+                Collections.sort(r.relatedKanji, new KanjiComparator());
+            }
         }
     }
 
@@ -79,6 +82,8 @@ public class RadicalLookup {
         }
         r.close();
         f.close();
+
+
     }
 
     List<Radical> getRadicalsFromEnglishString(String englishString) throws Exception
@@ -126,65 +131,15 @@ public class RadicalLookup {
             a = output;
         }
 
-        if (output == null)
-            return new ArrayList<String>(a);
-        else
-            return new ArrayList<String>(output);
-    }
-
-    List<String> getKanjiFromRadicals(List<Radical> radicals)
-    {
-        return null;
-    }
-
-    //This is probably useless...
-    /*List<Radical> getRadicalsFromEnglishStringList(List<String> englishStrings) throws Exception
-    {
-        List<Radical> output = new ArrayList<Radical>();
-        Hashtable<String, Radical> h = new Hashtable<String, Radical>();
-
-        for (String s : englishStrings)
-            for (Radical r : getRadicalsFromEnglishString(s))
-                if (!h.containsKey(r.character))
-                    h.put(r.character, r);
-
-        for (Radical r : h.values())
-            output.add(r);
-
-        return output;
-    }*/
-
-    List<String> getStuff()
-    {
-        return radicalsDb.get("女").relatedKanji;
-    }
-
-    /*public static void main(String args[]) throws Exception
-    {
-        RadicalLookup rl = new RadicalLookup();
-
-        for (Radical rad : rl.getRadicalsFromEnglishString("croo")) {
-            //System.out.println(rad);
-            PrintStream out = new PrintStream(System.out, true, "UTF8");
-            out.print(rad.character);
+        if (output == null) {
+            List<String> l = new ArrayList<String>(a);
+            Collections.sort(l, new KanjiComparator());
+            return l;
         }
-    }*/
-
-}
-
-/*
-For reading resource files:
-
-    try {
-        Resources res = getResources();
-        InputStream in_s = res.openRawResource(R.raw.help);
-
-        byte[] b = new byte[in_s.available()];
-        in_s.read(b);
-        txtHelp.setText(new String(b));
-    } catch (Exception e) {
-        // e.printStackTrace();
-        txtHelp.setText("Error: can't show help.");
+        else {
+            List<String> l = new ArrayList<String>(output);
+            Collections.sort(l, new KanjiComparator());
+            return l;
+        }
     }
-
- */
+}
