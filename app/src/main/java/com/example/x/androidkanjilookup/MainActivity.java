@@ -1,6 +1,7 @@
 package com.example.x.androidkanjilookup;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListAdapter;
@@ -88,23 +90,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
+        final EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
+        final Button btnRadicalSearch = (Button) findViewById(R.id.btnRadicalSearch);
+        final Button btnDictionarySearch = (Button) findViewById(R.id.btnDictionarySearch);
+        final TextView txtTranslations = (TextView) findViewById(R.id.txtTranslations);
+        final EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
+        final TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
+
+
         setSupportActionBar(toolbar);
 
-        TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
         Typeface tf = Typeface.createFromAsset(getAssets(),"DroidSansJapanese.ttf");
         //lblOutput.setTypeface(tf);
 
         try {
             KanjiDic.initialize(this);
+            Cedict.initialize(this);
         }
         catch (Exception e)
         {
             lblOutput.setText(e.getMessage());
         }
-
-        GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
-        EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
 
         radicalsInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -117,10 +126,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
-                TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
-                GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
-
                 Date start = new Date();
 
                 try {
@@ -137,15 +142,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        txtTextInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                List<String> translations = Cedict.getTranslations(txtTextInput.getText().toString());
+                StringBuilder output = new StringBuilder();
+                for (String t : translations)
+                    output.append(t);
+                txtTranslations.setText(output.toString());
+            }
+        });
+
         filteredKanjiList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedKanji = ((TextView)view).getText().toString();
-                EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
                 txtTextInput.append(selectedKanji);
             }
         });
 
+        btnRadicalSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filteredKanjiList.setVisibility(View.VISIBLE);
+                txtTranslations.setVisibility(View.GONE);
+            }
+        });
+
+        btnDictionarySearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filteredKanjiList.setVisibility(View.GONE);
+                txtTranslations.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override
