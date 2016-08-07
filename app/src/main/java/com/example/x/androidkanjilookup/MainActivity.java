@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         final GridView filteredKanjiList = (GridView) findViewById(R.id.filteredKanjiList);
         final EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
         final Button btnRadicalSearch = (Button) findViewById(R.id.btnRadicalSearch);
@@ -100,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         final EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
         final TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
 
-
-        setSupportActionBar(toolbar);
+        txtTranslations.setMovementMethod(new ScrollingMovementMethod());
+        //setSupportActionBar(toolbar);
 
         Typeface tf = Typeface.createFromAsset(getAssets(),"DroidSansJapanese.ttf");
         //lblOutput.setTypeface(tf);
@@ -161,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         StringBuilder output = new StringBuilder();
                         for (String t : translations)
-                            output.append(t);
+                            output.append(t + "\n");
                         txtTranslations.setText(output.toString());
                     }
                 }

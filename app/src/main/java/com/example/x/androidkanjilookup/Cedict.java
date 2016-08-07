@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,28 +49,17 @@ public class Cedict {
             String readingWithTones = reading.replace(" ", "");
             addToDictionary(readingWithTones, line);
 
-            //readingWithoutTones = re.sub("\d", "", readingWithTones)
             StringBuilder readingWithoutTones = new StringBuilder(readingWithTones.length());
             for (int i = 0; i < readingWithTones.length(); i++)
                 if ((int)readingWithTones.charAt(i) < (int)'0'
-                        && (int)readingWithTones.charAt(i) > (int)'9')
+                        || (int)readingWithTones.charAt(i) > (int)'9')
                     readingWithoutTones.append(readingWithTones.charAt(i));
 
             addToDictionary(readingWithoutTones.toString(), line);
 
-            /*translations = line[line.find("/"):].lower().replace("/", " ")
-            for w in translations.split(" "):
-            self.__addToDictionary(w, line)*/
-
-
-            /*
-            String[] split = line.split(" ");
-            for (String s : split)
-                if (s.charAt(0) == 'S') {
-                    int strokeCount = Integer.parseInt(s.substring(1));
-                    strokeNumberDictionary.put(split[0], strokeCount);
-                    break;
-                }*/
+            //translations (too memory hungry, as it is...)
+            /*for (String w : line.substring(line.indexOf("/")).toLowerCase().replace('/', ' ').split(" "))
+                addToDictionary(w, line);*/
         }
         r.close();
         f.close(); //TODO: is this really the right way to close the streams?
@@ -81,7 +71,7 @@ public class Cedict {
             dictionary.get(key).add(content);
         else
         {
-            LinkedList<String> l = new LinkedList<>();
+            ArrayList<String> l = new ArrayList<>();
             l.add(content);
             dictionary.put(key, l);
         }
@@ -90,8 +80,37 @@ public class Cedict {
     public static List<String> getTranslations(String text)
     {
         if (text == null || text.isEmpty())
-            return null; 
+            return null;
         return dictionary.get(text.toLowerCase());
+    }
+
+    public static List<String> splitSentence(String text)
+    {
+        List<String> output = new ArrayList<>();
+        if (text.length() == 0)
+            return output;
+        if (text.length() == 1)
+        {
+            output.add(text);
+            return output;
+        }
+        for (int length = text.length(); length > 0; length--)
+        {
+            for (int i = 0; text.length() - length + 1 < 0; i++)
+            {
+                String t = text.substring(i, i+length);
+                if (getTranslations(t) != null)
+                {
+                    output.addAll(splitSentence(text.substring(0, i)));
+                    output.add(t);
+                    output.addAll(splitSentence(text.substring(i+length)));
+                    return output;
+                }
+            }
+        }
+
+        output.add(text);
+        return output;
     }
 
 }
