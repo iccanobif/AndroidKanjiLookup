@@ -81,8 +81,12 @@ public class MainActivity extends AppCompatActivity {
         final TextView txtTranslations = (TextView) findViewById(R.id.txtTranslations);
         final EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
         final TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
+        final LinearLayout viewSplittedWords = (LinearLayout) findViewById(R.id.viewSplittedWords);
+        //final TextView selectPreviousWord = (TextView) findViewById(R.id.selectPreviousWord);
+        //final TextView selectNextWord = (TextView) findViewById(R.id.selectNextWord);
 
         txtTranslations.setMovementMethod(new ScrollingMovementMethod());
+
         //setSupportActionBar(toolbar);
 
         Typeface tf = Typeface.createFromAsset(getAssets(),"DroidSansJapanese.ttf");
@@ -164,6 +168,19 @@ public class MainActivity extends AppCompatActivity {
                 txtTranslations.setVisibility(View.VISIBLE);
             }
         });
+
+        /*selectPreviousWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = 0; i < viewSplittedWords.getChildCount(); i++) {
+                    if (!(viewSplittedWords.getChildAt(i) instanceof TextView))
+                        continue;
+                    TextView
+                    ((TextView) viewSplittedWords.getChildAt(i)).setPaintFlags(
+                            ((TextView) viewSplittedWords.getChildAt(i)).getPaintFlags() & ~TextPaint.UNDERLINE_TEXT_FLAG);
+                }
+            }
+        });*/
     }
 
     private void showTranslation(String word)
@@ -190,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         {
             TextView tmp = new TextView(this);
             tmp.setTextColor(android.graphics.Color.BLACK);
-            tmp.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 40);
+            tmp.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 30);
             tmp.setText(w);
             tmp.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                                                            ViewGroup.LayoutParams.WRAP_CONTENT));
