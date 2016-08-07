@@ -153,11 +153,22 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                List<String> translations = Cedict.getTranslations(txtTextInput.getText().toString());
-                StringBuilder output = new StringBuilder();
-                for (String t : translations)
-                    output.append(t);
-                txtTranslations.setText(output.toString());
+                try {
+
+                    List<String> translations = Cedict.getTranslations(txtTextInput.getText().toString());
+                    if (translations == null)
+                        txtTranslations.setText("Nothing to see here....");
+                    else {
+                        StringBuilder output = new StringBuilder();
+                        for (String t : translations)
+                            output.append(t);
+                        txtTranslations.setText(output.toString());
+                    }
+                }
+                catch (Exception e)
+                {
+                    txtTranslations.setText(e.getMessage());
+                }
             }
         });
 

@@ -89,6 +89,8 @@ public class Cedict {
 
     public static List<String> getTranslations(String text)
     {
+        if (text == null || text.isEmpty())
+            return null; 
         return dictionary.get(text.toLowerCase());
     }
 
