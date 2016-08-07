@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText radicalsInput = (EditText) findViewById(R.id.radicalsInput);
         final Button btnRadicalSearch = (Button) findViewById(R.id.btnRadicalSearch);
         final Button btnDictionarySearch = (Button) findViewById(R.id.btnDictionarySearch);
+        final Button btnClearRadicalInput = (Button) findViewById(R.id.btnClearRadicalInput);
         final TextView txtTranslations = (TextView) findViewById(R.id.txtTranslations);
         final EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
         final TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
@@ -166,6 +167,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 filteredKanjiList.setVisibility(View.GONE);
                 txtTranslations.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnClearRadicalInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                radicalsInput.setText("");
             }
         });
 

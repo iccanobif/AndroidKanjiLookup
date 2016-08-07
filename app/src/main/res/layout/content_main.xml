@@ -16,11 +16,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
     <EditText
         android:id="@+id/radicalsInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions" />
+        android:inputType="textNoSuggestions"
+        android:layout_weight="2"
+        />
+
+        <Button
+            android:id="@+id/btnClearRadicalInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C"
+            android:layout_weight="1"
+            />
+        <Button
+            android:id="@+id/btnRadicalSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R"
+            android:layout_weight="1"
+            />
+</LinearLayout>
+
 
     <TextView
         android:id="@+id/lblOutput"
@@ -30,37 +55,30 @@
         android:visibility="gone"
         />
 
-    <EditText
-        android:id="@+id/txtTextInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"/>
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-    </ListView>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/btnRadicalSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Radical search"
-            android:backgroundTint="#aa0000"
-            android:maxHeight="1dp" />
+            <EditText
+                android:id="@+id/txtTextInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
+                android:layout_weight="1"
+                />
+
+
+
         <Button
             android:id="@+id/btnDictionarySearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dictionary search"
+            android:text="D"
+            android:layout_weight="1"
             />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,17 +89,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="<-" />-->
-<HorizontalScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/viewSplittedWords"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-        </LinearLayout>
-</HorizontalScrollView>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:id="@+id/viewSplittedWords"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                    </LinearLayout>
+            </HorizontalScrollView>
         <!--<TextView
             android:id="@+id/selectNextWord"
             android:layout_width="wrap_content"
