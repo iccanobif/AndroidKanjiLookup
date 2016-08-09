@@ -4,17 +4,17 @@ import android.content.Context;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Hashtable;
+import java.util.*;
 
 public class KanjiDic {
-    public static Hashtable<String, Integer> strokeNumberDictionary;
+    public static HashMap<String, Integer> strokeNumberDictionary;
 
     public static void initialize(Context c) throws Exception
     {
         if (strokeNumberDictionary != null)
             return;
 
-        strokeNumberDictionary = new Hashtable<String, Integer>();
+        strokeNumberDictionary = new HashMap<>();
 
         InputStreamReader f = new InputStreamReader(c.getAssets().open("kanjidic.txt"), "UTF8");
         BufferedReader r = new BufferedReader(f);
@@ -37,10 +37,11 @@ public class KanjiDic {
 
     public static int getSrokeCount(String kanji)
     {
-        if (strokeNumberDictionary.containsKey(kanji))
-            return strokeNumberDictionary.get(kanji);
-        else
+        Integer output = strokeNumberDictionary.get(kanji);
+
+        if (output == null)
             return 999;
+        return output;
     }
 
 

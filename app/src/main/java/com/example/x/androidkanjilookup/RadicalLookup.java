@@ -115,6 +115,8 @@ public class RadicalLookup {
 
         if (englishStrings.length == 0)
             return new ArrayList<String>();
+        if (englishStrings.length == 1 && englishStrings[0].equals(""))
+            return new ArrayList<String>();
 
         Set<String> a = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[0].trim()));
         Set<String> b = null;
