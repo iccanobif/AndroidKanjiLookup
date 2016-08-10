@@ -64,10 +64,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textNoSuggestions"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 />
 
-
+        <Button
+            android:id="@+id/btnClearDictionaryInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C"
+            android:layout_weight="1"
+            />
 
         <Button
             android:id="@+id/btnDictionarySearch"

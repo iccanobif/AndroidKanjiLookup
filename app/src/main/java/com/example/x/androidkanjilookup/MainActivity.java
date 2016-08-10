@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         final Button btnRadicalSearch = (Button) findViewById(R.id.btnRadicalSearch);
         final Button btnDictionarySearch = (Button) findViewById(R.id.btnDictionarySearch);
         final Button btnClearRadicalInput = (Button) findViewById(R.id.btnClearRadicalInput);
+        final Button btnClearDictionaryInput = (Button) findViewById(R.id.btnClearDictionaryInput);
         final TextView txtTranslations = (TextView) findViewById(R.id.txtTranslations);
         final EditText txtTextInput = (EditText) findViewById(R.id.txtTextInput);
         final TextView lblOutput = (TextView) findViewById(R.id.lblOutput);
@@ -177,6 +178,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnClearDictionaryInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtTextInput.setText("");
+            }
+        });
+
         /*selectPreviousWord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,6 +245,9 @@ public class MainActivity extends AppCompatActivity {
             Space space = new Space(this);
             space.setMinimumWidth(10);
             viewSplittedWords.addView(space);
+
+            if (w.equals(words.get(words.size()-1)))
+                showTranslation(w);
         }
 
     }

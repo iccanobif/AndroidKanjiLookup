@@ -17,6 +17,7 @@ public class ExampleUnitTest {
     {
         KanjiDic.initialize(null);
         RadicalLookup.initialize(null);
+        Cedict.initialize(null);
     }
 
     @Test
@@ -32,27 +33,48 @@ public class ExampleUnitTest {
         assert(l.size() == 0);
     }
 
-
     @Test
     public void RadicalLookup() throws  Exception
     {
         List<String> l = RadicalLookup.getKanjiFromEnglishStrings(new String[] {"action", "power"});
-        for (String s : l)
-            System.out.println(s);
         assert(l.contains("務"));
     }
 
     @Test
     public void fdafdsa() throws Exception
     {
-        //Fuck reflection
-        /*Class c = Class.forName("RadicalLookup");
-        Method m = c.getDeclaredMethod("dsfdsaf");*/
         List<RadicalLookup.Radical> action = RadicalLookup.getRadicalsFromEnglishString("action");
         List<RadicalLookup.Radical> power = RadicalLookup.getRadicalsFromEnglishString("power");
-        Set<String> set = RadicalLookup.getAllKanjiFromRadicalList(action);
-        assert(set.contains("務"));
-        //assert(RadicalLookup.getAllKanjiFromRadicalList(power).contains("務"));
+        assert(RadicalLookup.getAllKanjiFromRadicalList(action).contains("務")
+                && RadicalLookup.getAllKanjiFromRadicalList(power).contains("務"));
+    }
 
+    @Test
+    public void CedictByKanji() throws Exception
+    {
+        String s = new String();
+        for (String t : Cedict.getTranslations("女"))
+            s += t;
+        assert(s.contains("woman"));
+    }
+
+    @Test
+    public void CedictByReadingWithTones() throws Exception
+    {
+
+        String s = new String();
+        for (String t : Cedict.getTranslations("ni3hao3"))
+            s += t;
+        assert(s.contains("Hello"));
+    }
+
+    @Test
+    public void CedictByReadingWithoutTones() throws Exception
+    {
+
+        String s = new String();
+        for (String t : Cedict.getTranslations("nihao"))
+            s += t;
+        assert(s.contains("Hello"));
     }
 }
