@@ -3,6 +3,7 @@ package com.example.x.androidkanjilookup;
 import android.content.Context;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -22,7 +23,13 @@ public class Cedict {
 
         dictionary = new Hashtable<>();
 
-        InputStreamReader f = new InputStreamReader(c.getAssets().open("cedict.txt"), "UTF8");
+        InputStreamReader f;
+
+        if (c != null)
+            f = new InputStreamReader(c.getAssets().open("cedict.txt"), "UTF8");
+        else
+            f = new InputStreamReader(new FileInputStream(System.getProperty("user.dir") + "\\src\\main\\assets\\cedict.txt"), "UTF8");
+
         BufferedReader r = new BufferedReader(f);
         String line;
         while ((line = r.readLine()) != null)
