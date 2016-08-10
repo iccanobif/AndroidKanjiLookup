@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             KanjiDic.initialize(this);
             Cedict.initialize(this);
+            RadicalLookup.initialize(this);
         }
         catch (Exception e)
         {
@@ -115,8 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 Date start = new Date();
                 try {
-                    RadicalLookup rl = new RadicalLookup(getApplicationContext());
-                    List<String> lista = rl.getKanjiFromEnglishStrings(radicalsInput.getText().toString().toLowerCase().split(","));
+                    List<String> lista = RadicalLookup.getKanjiFromEnglishStrings(radicalsInput.getText().toString().toLowerCase().split(","));
                     filteredKanjiList.setAdapter(new MerdaAdapter(getApplicationContext(), lista));
                     lblOutput.setText(Long.toString(((new Date()).getTime() - start.getTime())));
                 } catch (Exception e) {

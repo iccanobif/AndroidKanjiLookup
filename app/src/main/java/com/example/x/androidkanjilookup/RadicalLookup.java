@@ -18,7 +18,7 @@ public class RadicalLookup {
     Example: from "pers" will return the "person" radicalsDb, that is 人, ? and 亻
      */
 
-    public class Radical
+    public static class Radical
     {
         public String character;
         public String description;
@@ -34,7 +34,7 @@ public class RadicalLookup {
 
     private static HashMap<String, Radical> radicalsDb = null;
 
-    public RadicalLookup(Context c) throws Exception
+    public static void initialize(Context c) throws Exception
     {
         if (radicalsDb == null) {
             radicalsDb = new HashMap<String, Radical>();
@@ -48,7 +48,7 @@ public class RadicalLookup {
         }
     }
 
-    private void loadRadicalsDb(Context c) throws Exception
+    private static void loadRadicalsDb(Context c) throws Exception
     {
         InputStreamReader f;
         if (c != null)
@@ -69,7 +69,7 @@ public class RadicalLookup {
         f.close(); //TODO: is this really the right way to close the streams?
     }
 
-    private void loadKradFile(Context c) throws Exception
+    private static void loadKradFile(Context c) throws Exception
     {
         //丼 : ｜ ノ 二 丶 廾 井
         InputStreamReader f = new InputStreamReader(c.getAssets().open("kradfile-u.txt"), "UTF8");
@@ -92,10 +92,10 @@ public class RadicalLookup {
 
     }
 
-    List<Radical> getRadicalsFromEnglishString(String englishString) throws Exception
+    private static List<Radical> getRadicalsFromEnglishString(String englishString) throws Exception
     {
         List<Radical> output = new ArrayList<Radical>();
-        for (Radical r : this.radicalsDb.values())
+        for (Radical r : radicalsDb.values())
         {
             if (r.description.contains(englishString))
                 output.add(r);
@@ -104,7 +104,7 @@ public class RadicalLookup {
         return output;
     }
 
-    Set<String> getAllKanjiFromRadicalList(List<Radical> radicalList)
+    private static Set<String> getAllKanjiFromRadicalList(List<Radical> radicalList)
     {
         HashSet<String> output = new HashSet<String>();
 
@@ -115,7 +115,7 @@ public class RadicalLookup {
     }
 
     //This kinda sucks... there must be a better way of doing an intersection of Lists...
-    List<String> getKanjiFromEnglishStrings(String[] englishStrings) throws Exception
+    public static List<String> getKanjiFromEnglishStrings(String[] englishStrings) throws Exception
     {
         Set<String> output = null;
 
