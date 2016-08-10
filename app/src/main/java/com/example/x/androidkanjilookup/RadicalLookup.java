@@ -28,7 +28,7 @@ public class RadicalLookup {
         {
             this.character = character;
             this.description = description;
-            this.relatedKanji = new ArrayList<String>();
+            this.relatedKanji = new ArrayList<>();
         }
     }
 
@@ -37,9 +37,10 @@ public class RadicalLookup {
     public static void initialize(Context c) throws Exception
     {
         if (radicalsDb == null) {
-            radicalsDb = new HashMap<String, Radical>();
+            radicalsDb = new HashMap<>();
             loadRadicalsDb(c);
             loadKradFile(c);
+            completeConnections();
             KanjiDic.initialize(c);
             for (Radical r : radicalsDb.values())
             {
@@ -72,13 +73,22 @@ public class RadicalLookup {
     private static void loadKradFile(Context c) throws Exception
     {
         //丼 : ｜ ノ 二 丶 廾 井
-        InputStreamReader f = new InputStreamReader(c.getAssets().open("kradfile-u.txt"), "UTF8");
+        InputStreamReader f;
+        if (c != null)
+            f = new InputStreamReader(c.getAssets().open("kradfile-u.txt"), "UTF8");
+        else
+            f = new InputStreamReader(new FileInputStream(System.getProperty("user.dir") + "\\src\\main\\assets\\kradfile-u.txt"), "UTF8");
+
         BufferedReader r = new BufferedReader(f);
         String line;
         while ((line = r.readLine()) != null)
         {
             if (line.charAt(0) == '#')
                 continue;
+            if (line.charAt(0) == '務')
+            {
+                line = line;
+            }
             String[] split = line.split(" ");
             for (int i = 2; i < split.length; i++)
             {
@@ -88,11 +98,19 @@ public class RadicalLookup {
         }
         r.close();
         f.close();
-
-
     }
 
-    private static List<Radical> getRadicalsFromEnglishString(String englishString) throws Exception
+    public static void completeConnections()
+    {
+        for (Radical r : new ArrayList<>(radicalsDb.values()))
+            for (String k: new ArrayList<>(r.relatedKanji))
+                if (radicalsDb.keySet().contains(k))
+                    for (String n: new ArrayList<>(radicalsDb.get(k).relatedKanji))
+                        if (!radicalsDb.get(r.character).relatedKanji.contains(n))
+                            radicalsDb.get(r.character).relatedKanji.add(n);
+    }
+
+    public static List<Radical> getRadicalsFromEnglishString(String englishString) throws Exception
     {
         List<Radical> output = new ArrayList<Radical>();
         for (Radical r : radicalsDb.values())
@@ -104,9 +122,9 @@ public class RadicalLookup {
         return output;
     }
 
-    private static Set<String> getAllKanjiFromRadicalList(List<Radical> radicalList)
+    public static Set<String> getAllKanjiFromRadicalList(List<Radical> radicalList)
     {
-        HashSet<String> output = new HashSet<String>();
+        HashSet<String> output = new HashSet<>();
 
         for (Radical r : radicalList)
             output.addAll(r.relatedKanji);
@@ -120,16 +138,16 @@ public class RadicalLookup {
         Set<String> output = null;
 
         if (englishStrings.length == 0)
-            return new ArrayList<String>();
+            return new ArrayList<>();
         if (englishStrings.length == 1 && englishStrings[0].equals(""))
-            return new ArrayList<String>();
+            return new ArrayList<>();
 
         Set<String> a = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[0].trim()));
         Set<String> b = null;
 
         for (int i = 1; i < englishStrings.length; i++)
         {
-            output = new HashSet<String>();
+            output = new HashSet<>();
             b = getAllKanjiFromRadicalList(getRadicalsFromEnglishString(englishStrings[i].trim()));
 
             for (String s : a)
@@ -140,12 +158,12 @@ public class RadicalLookup {
         }
 
         if (output == null) {
-            List<String> l = new ArrayList<String>(a);
+            List<String> l = new ArrayList<>(a);
             Collections.sort(l, new KanjiComparator());
             return l;
         }
         else {
-            List<String> l = new ArrayList<String>(output);
+            List<String> l = new ArrayList<>(output);
             Collections.sort(l, new KanjiComparator());
             return l;
         }
